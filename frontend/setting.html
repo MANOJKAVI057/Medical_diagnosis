@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings Page</title>
+  <style>
+    :root {
+      --bg-color: #f5f6fa;
+      --text-color: #2f3640;
+    }
+    [data-theme="dark"] {
+      --bg-color: #2f3640;
+      --text-color: #f5f6fa;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      background-color: var(--bg-color);
+    }
+    h1 { text-align: center; margin-bottom: 30px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    select, button {
+      width: 100%; padding: 10px; margin-bottom: 20px; border-radius: 6px;
+      border: 1px solid #dcdde1;
+      font-size: 16px;
+    }
+    button { background-color: #273c75; color: #fff; border: none; cursor: pointer; }
+    button:hover { background-color: #40739e; }
+    footer{
+  width:100%;
+  text-align:center;
+  padding:15px;
+  background-color:var(--bg-color);
+  position:fixed;
+  bottom:0;
+  left:0;
+  transition:0.3s ease;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Settings</h1>
+
+    <label for="theme">Select Theme</label>
+    <select id="theme">
+      <option value="light">☀ Light</option>
+      <option value="dark">🌙 Dark</option>
+    </select>
+
+    <label for="language">Select Language</label>
+    <select id="language">
+      <option value="en">English</option>
+    </select>
+
+    <button id="applyBtn">Apply Settings</button>
+    <button id="backBtn">Back</button>
+  </div>
+
+  <script>
+    // Load saved settings
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const savedLang = localStorage.getItem('lang') || 'en';
+
+    document.getElementById('theme').value = savedTheme;
+    document.getElementById('language').value = savedLang;
+
+    // Apply theme immediately
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    document.getElementById('applyBtn').addEventListener('click', () => {
+      const selectedTheme = document.getElementById('theme').value;
+      const selectedLang = document.getElementById('language').value;
+
+      // Save settings globally
+      localStorage.setItem('theme', selectedTheme);
+      localStorage.setItem('lang', selectedLang);
+
+      // Apply theme immediately
+      document.documentElement.setAttribute('data-theme', selectedTheme);
+      alert('Settings applied! Theme will persist across all pages.');
+    });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      window.history.back();
+    });
+  </script>
+<footer>
+    &copy; 2026 Diagnosis System | All Rights Reserved
+</footer>
+</body>
+</html>

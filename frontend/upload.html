@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload Diagnosis</title>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+    --bg-color: linear-gradient(135deg, #1e3c72, #2a5298);
+    --text-color: #fff;
+    --form-bg: rgba(255,255,255,0.05);
+    --input-bg: rgba(255,255,255,0.1);
+    --button-bg: linear-gradient(90deg, #00c6ff, #0072ff);
+    --result-bg: rgba(255,255,255,0.08);
+    --chart-bg: #fff;
+    --footer-bg: #2c3e50;
+    --footer-text: #fff;
+}
+
+body {
+    font-family: "Times New Roman", Times, serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+body.light-mode {
+    --bg-color: #f0f2f5;                 
+    --text-color: #1a1a1a;               
+    --form-bg: rgba(240,240,240,0.95);   
+    --input-bg: #e0e0e0;                  
+    --input-text: #111;                   
+    --placeholder-color: #555;            
+    --button-bg: linear-gradient(90deg, #0099ff, #005fa3); 
+    --result-bg: rgba(220,220,220,0.95); 
+    --chart-bg: #f9f9f9;                  
+    --footer-bg: #2c3e50;                 
+    --footer-text: #fff;                  
+    --requirement-text: #333; 
+}
+
+
+form .form-group small {
+    color: var(--requirement-text);
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+}
+
+.toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    z-index: 1000;
+}
+
+/* Center the form content */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center inputs */
+    justify-content: center;
+    background: var(--form-bg);
+    padding: 50px 50px;
+    border-radius: 25px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+}
+
+.form-group {
+    width: 80%; 
+    margin-bottom: 18px;
+    text-align: center; 
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"] {
+    width: 100%;
+    padding: 18px 22px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 15px;
+    outline: none;
+    font-size: 1.1rem;
+    background: var(--input-bg);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    text-align: center; 
+}
+
+input::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+input:focus {
+    border: 1px solid #00c6ff;
+    box-shadow: 0 0 15px rgba(0,198,255,0.7);
+    background: rgba(255,255,255,0.15);
+}
+
+.form-group small {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9rem;
+    display: block;
+    margin-top: 4px;
+    text-align: center;
+}
+
+button {
+    padding: 16px 35px;
+    margin: 15px 0;
+    background: var(--button-bg);
+    border: none;
+    border-radius: 35px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.8);
+}
+
+#result {
+    margin-top: 30px;
+    text-align: center;
+    background: var(--result-bg);
+    padding: 25px 30px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.chart-container {
+    max-width: 800px;
+    height: 400px;
+    width: 90%;
+    margin: 40px auto;
+    background: var(--chart-bg);
+    border-radius: 25px;
+    padding: 25px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    transition: background 0.3s ease;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    margin-top: 40px;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    form { width: 90%; padding: 35px; }
+    input { font-size: 1rem; padding: 16px; }
+    button { width: 100%; font-size: 1rem; padding: 14px 20px; }
+    .chart-container { width: 95%; height: 300px; padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<button class="toggle-btn" onclick="toggleMode()">☀ Light Mode</button>
+
+<h2>Upload Patient Data</h2>
+
+<form id="form">
+  <div class="form-group">
+    <input type="text" id="patient_name" placeholder="Patient Name" required>
+    <small>Enter full name of the patient</small>
+  </div>
+  <div class="form-group">
+    <input type="number" id="age" placeholder="Age" required>
+    <small>Age in years (e.g., 25)</small>
+  </div>
+  <div class="form-group">
+    <input type="number" id="hr" placeholder="Heart Rate" required>
+    <small>Normal range: 60-100 bpm</small>
+  </div>
+  <div class="form-group">
+    <input type="number" id="bp1" placeholder="Systolic BP" required>
+    <small>Normal: ~120 mmHg</small>
+  </div>
+  <div class="form-group">
+    <input type="number" id="bp2" placeholder="Diastolic BP" required>
+    <small>Normal: ~80 mmHg</small>
+  </div>
+  <div class="form-group">
+    <input type="number" id="spo2" placeholder="SpO2" required>
+    <small>Oxygen saturation, normal ≥ 95%</small>
+  </div>
+  <div class="form-group">
+    <input type="number" id="temp" placeholder="Temperature" required>
+    <small>Temperature in °C, normal ~37°C</small>
+  </div>
+  <div class="form-group">
+    <input type="file" id="image" required>
+    <small>Upload any medical scan or image</small>
+  </div>
+  <button type="submit">Diagnose</button>
+</form>
+
+<button onclick="goDashboard()">Back to Dashboard</button>
+
+<div id="result"></div>
+
+<div class="chart-container">
+  <canvas id="healthChart"></canvas>
+</div>
+
+<footer>
+  &copy; 2026 Diagnosis System | All Rights Reserved
+</footer>
+
+<script>
+const API = "http://127.0.0.1:8000";
+const token = localStorage.getItem("token");
+
+if(!token){
+    window.location.href="login.html";
+}
+
+function goDashboard() { 
+    window.location.href="dashboard.html"; 
+}
+
+let chart;
+
+function createChart(values){
+    const normal = { hr:72, sys:120, dia:80, spo2:98, temp:37 };
+    const ctx = document.getElementById("healthChart").getContext("2d");
+
+    if(chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+        type: 'line',
+        data:{
+            labels:["Heart Rate","Systolic BP","Diastolic BP","SpO2","Temperature"],
+            datasets:[
+                {
+                    label:"Normal Values",
+                    data:[normal.hr,normal.sys,normal.dia,normal.spo2,normal.temp],
+                    borderColor:"green",
+                    backgroundColor:"rgba(0,255,0,0.2)",
+                    fill:true,
+                    tension:0.3
+                },
+                {
+                    label:"Entered Values",
+                    data:[values.hr,values.sys,values.dia,values.spo2,values.temp],
+                    borderColor:"red",
+                    backgroundColor:"rgba(255,0,0,0.2)",
+                    fill:true,
+                    tension:0.3
+                }
+            ]
+        },
+        options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            plugins:{legend:{position:"top"}},
+            scales:{y:{beginAtZero:true}}
+        }
+    });
+}
+
+document.getElementById("form").onsubmit = async (e) => {
+    e.preventDefault();
+
+    document.getElementById("result").innerHTML = "<h3>Processing Diagnosis...</h3>";
+
+    const formData = new FormData();
+    formData.append("patient_name", document.getElementById("patient_name").value);
+    formData.append("age", document.getElementById("age").value);
+    formData.append("heart_rate", document.getElementById("hr").value);
+    formData.append("systolic_bp", document.getElementById("bp1").value);
+    formData.append("diastolic_bp", document.getElementById("bp2").value);
+    formData.append("spo2", document.getElementById("spo2").value);
+    formData.append("temperature", document.getElementById("temp").value);
+    formData.append("image", document.getElementById("image").files[0]);
+
+    try{
+        const res = await fetch(API + "/diagnose/", {
+            method:"POST",
+            headers:{ Authorization:"Bearer " + token },
+            body:formData
+        });
+
+        const data = await res.json();
+        console.log("API Response:", data);
+
+        if(!res.ok){
+            document.getElementById("result").innerHTML =
+                `<h3 style="color:red;">Error: ${data.detail || "Diagnosis failed"}</h3>`;
+            return;
+        }
+
+        document.getElementById("result").innerHTML = `
+            <h3>Diagnosis: ${data.diagnosis}</h3>
+            <h4>Confidence: ${data.confidence_percent}%</h4>
+            <h4>Risk Level: ${data.risk_level}</h4>
+        `;
+
+        createChart({
+            hr:Number(document.getElementById("hr").value),
+            sys:Number(document.getElementById("bp1").value),
+            dia:Number(document.getElementById("bp2").value),
+            spo2:Number(document.getElementById("spo2").value),
+            temp:Number(document.getElementById("temp").value)
+        });
+
+    }catch(error){
+        console.error(error);
+        document.getElementById("result").innerHTML =
+            "<h3 style='color:red;'>Server connection failed.</h3>";
+    }
+};
+
+// Light/Dark mode
+function toggleMode(){
+    document.body.classList.toggle('light-mode');
+    const btn = document.querySelector('.toggle-btn');
+    btn.textContent =
+        document.body.classList.contains('light-mode')
+        ? '🌙 Dark Mode'
+        : '☀ Light Mode';
+}
+</script>
+</body>
+</html>

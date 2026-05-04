@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient History</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --container-bg: white;
+            --text-color: #333;
+            --subtext-color: #555;
+            --table-head-bg: #007bff;
+            --table-head-color: white;
+            --table-row-even: #f2f2f2;
+            --btn-bg: linear-gradient(90deg, #2575fc, #6a11cb);
+            --footer-bg: #f0f0f0;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1e1e1e;
+            --container-bg: #2c2c2c;
+            --text-color: #f0f0f0;
+            --subtext-color: #ccc;
+            --table-head-bg: #444;
+            --table-head-color: #fff;
+            --table-row-even: #333;
+            --btn-bg: linear-gradient(90deg, #3a3a3a, #1e1e1e);
+            --footer-bg: #222;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: all 0.5s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: var(--container-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        thead {
+            background-color: var(--table-head-bg);
+            color: var(--table-head-color);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+
+        #noData {
+            text-align: center;
+            margin-top: 20px;
+            color: red;
+        }
+
+        a {
+            color: var(--table-head-bg);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .back-btn, .theme-toggle {
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: var(--btn-bg);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover, .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 15px;
+            background-color: var(--footer-bg);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button class="theme-toggle" id="themeToggle">☀ Light/🌙 Dark Mode</button>
+
+    <h2>Patient History</h2>
+
+    <table id="historyTable">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Doctor</th>
+                <th>Patient Name</th>
+                <th>Date</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+
+    <p id="noData" class="hidden">No History Found</p>
+
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">Back</button>
+</div>
+
+<footer>
+    &copy; 2026 Diagnosis System | All Rights Reserved
+</footer>
+
+<script>
+    const API = "http://127.0.0.1:8000"; // Your backend URL
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "login.html";
+    }
+
+    async function loadHistory() {
+        try {
+            const res = await fetch(API + "/history", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (res.status === 401) {
+                alert("Session expired. Please login again.");
+                localStorage.clear();
+                window.location.href = "login.html";
+                return;
+            }
+
+            const data = await res.json();
+            const tableBody = document.querySelector("#historyTable tbody");
+            const noDataText = document.getElementById("noData");
+
+            tableBody.innerHTML = "";
+
+            if (!data || data.length === 0) {
+                noDataText.classList.remove("hidden");
+                return;
+            }
+
+            noDataText.classList.add("hidden");
+
+            data.forEach((item, index) => {
+                const row = document.createElement("tr");
+                const dateObj = new Date(item.date);
+                const doctor = item.doctor || "-";
+                const patient = item.patient_name || "-";
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${doctor}</td>
+                    <td>${patient}</td>
+                    <td>${dateObj.toLocaleDateString()}</td>
+                    <td>${dateObj.toLocaleTimeString()}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+        } catch (error) {
+            console.error("Error fetching history:", error);
+        }
+    }
+
+    // Load data when page opens
+    loadHistory();
+
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    themeToggle.addEventListener('click', () => {
+        const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Patient</title>
+
+<style>
+/* ===== THEME VARIABLES ===== */
+:root {
+    --bg-gradient: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    --card-bg: #ffffff;
+    --text-color: #222;
+    --input-bg: #f0f0f0;
+    --button-gradient: linear-gradient(90deg, #4facfe, #00f2fe);
+    --footer-bg: #e0e0e0;
+}
+
+[data-theme="dark"] {
+    --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    --card-bg: rgba(30, 42, 51, 0.95);
+    --text-color: #f5f5f5;
+    --input-bg: #2b3b45;
+    --button-gradient: linear-gradient(90deg, #00c6ff, #0072ff);
+    --footer-bg: #1a2a33;
+}
+
+/* ===== GLOBAL ===== */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg-gradient);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: var(--text-color);
+}
+
+/* ===== HEADER ===== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 30px;
+}
+
+.header button {
+    padding: 10px 18px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: var(--button-gradient);
+    color: white;
+}
+
+/* ===== MAIN CENTER ===== */
+.main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== CARD ===== */
+.card {
+    background: var(--card-bg);
+    padding: 50px;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    backdrop-filter: blur(12px);
+}
+
+/* ===== TITLE ===== */
+h2 {
+    text-align: center;
+    margin-bottom: 35px;
+    font-size: 30px;
+}
+
+/* ===== INPUTS ===== */
+input, select, textarea {
+    width: 100%;
+    padding: 18px;
+    margin-bottom: 22px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    background: var(--input-bg);
+    color: var(--text-color);
+    font-size: 18px;
+}
+
+input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 0 3px #00c6ff;
+}
+
+/* ===== BUTTON ===== */
+.submit-btn {
+    width: 100%;
+    padding: 18px;
+    border-radius: 35px;
+    border: none;
+    background: var(--button-gradient);
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+}
+
+/* ===== FOOTER ===== */
+footer {
+    text-align: center;
+    padding: 15px;
+    background: var(--footer-bg);
+    font-size: 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+    .card {
+        margin: 20px;
+        padding: 35px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Header -->
+<div class="header">
+    <button onclick="goDashboard()">⬅ Back</button>
+    <button onclick="toggleTheme()">☀/🌙 Mode</button>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+    <div class="card">
+        <h2>Patient Information</h2>
+
+        <form id="patientForm">
+            <input type="text" placeholder="Full Name" id="name" required />
+            <input type="number" placeholder="Age" id="age" required />
+
+            <select id="gender" required>
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select>
+
+            <input type="text" placeholder="Blood Group (e.g. O+)" id="bloodgroup" required />
+            <input type="text" placeholder="Mobile Number" id="mobile" required />
+            <textarea placeholder="Address" id="address" rows="3" required></textarea>
+
+            <button type="submit" class="submit-btn">Save & Continue</button>
+        </form>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    © 2026 Diagnosis System | All Rights Reserved
+</footer>
+
+<script>
+/* ===== Navigation ===== */
+function goDashboard(){
+    window.location.href="dashboard.html";
+}
+
+/* ===== Theme Toggle ===== */
+function toggleTheme(){
+    const current=document.documentElement.getAttribute("data-theme");
+    const newTheme=current==="dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme",newTheme);
+    localStorage.setItem("theme",newTheme);
+}
+
+/* Load saved theme */
+const savedTheme=localStorage.getItem("theme") || "dark";
+document.documentElement.setAttribute("data-theme",savedTheme);
+</script>
+
+<script src="js/patient.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Profile</title>
+
+<style>
+:root{
+    --bg-color:#f4f6f9;
+    --card-color:white;
+    --text-color:#222;
+    --button-color:#0072ff;
+}
+
+body.dark{
+    --bg-color:#1e1e2f;
+    --card-color:#2b2b3d;
+    --text-color:#f5f5f5;
+    --button-color:#4a90e2;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    padding: 30px;
+    transition: all 0.3s ease;
+}
+
+.container{
+    max-width: 600px;
+    margin: auto;
+    background: var(--card-color);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+h2{
+    text-align: center;
+}
+
+.profile-item{
+    margin: 10px 0;
+}
+
+button{
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background: var(--button-color);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Toggle button */
+.toggle-btn{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<button class="toggle-btn" onclick="toggleMode()">🌙 Dark Mode</button>
+
+<div class="container">
+    <h2>Patient Profile</h2>
+    <div id="profile">Loading...</div>
+    <button onclick="goBack()">Back to Dashboard</button>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+const token = localStorage.getItem("token");
+
+if(!token){
+    window.location.href="login.html";
+}
+
+// ===============================
+// Dark Mode Logic
+// ===============================
+
+function toggleMode(){
+    document.body.classList.toggle("dark");
+
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+
+    document.querySelector(".toggle-btn").innerText = 
+        isDark ? "☀ Light Mode" : "🌙 Dark Mode";
+}
+
+function loadTheme(){
+    const savedTheme = localStorage.getItem("theme");
+
+    if(savedTheme === "dark"){
+        document.body.classList.add("dark");
+        document.querySelector(".toggle-btn").innerText = "☀ Light Mode";
+    }
+}
+
+loadTheme();
+
+// ===============================
+// Load Patient Profile
+// ===============================
+
+async function loadProfile() {
+    try{
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+
+        if(!id){
+            document.getElementById("profile").innerHTML="Invalid Patient ID";
+            return;
+        }
+
+        const response = await fetch(`${API}/patients/${id}`,{
+            headers:{
+                Authorization:"Bearer "+token
+            }
+        });
+
+        if(response.status === 401){
+            alert("Session expired. Login again.");
+            window.location.href="login.html";
+            return;
+        }
+
+        if(response.status === 404){
+            document.getElementById("profile").innerHTML="Patient not found";
+            return;
+        }
+
+        const patient = await response.json();
+
+        document.getElementById("profile").innerHTML = `
+            <div class="profile-item"><strong>Name:</strong> ${patient.name}</div>
+            <div class="profile-item"><strong>Age:</strong> ${patient.age}</div>
+            <div class="profile-item"><strong>Gender:</strong> ${patient.gender}</div>
+            <div class="profile-item"><strong>Blood Group:</strong> ${patient.bloodgroup}</div>
+            <div class="profile-item"><strong>Mobile:</strong> ${patient.mobile}</div>
+            <div class="profile-item"><strong>Address:</strong> ${patient.address}</div>
+        `;
+
+    }catch(err){
+        console.log("Profile error:",err);
+        document.getElementById("profile").innerHTML="Error loading profile";
+    }
+}
+
+function goBack(){
+    window.location.href="dashboard.html";
+}
+
+loadProfile();
+</script>
+
+<footer style="text-align:center;margin-top:30px;">
+© 2026 Diagnosis System | All Rights Reserved
+</footer>
+
+</body>
+</html>
