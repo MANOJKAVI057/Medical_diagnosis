@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us</title>
+
+<style>
+  :root {
+    --bg-gradient: linear-gradient(-45deg, #6a11cb, #2575fc, #00c6ff, #6a11cb);
+    --container-bg: rgba(255, 255, 255, 0.95);
+    --text-color: #333;
+    --subtext-color: #555;
+    --btn-bg: linear-gradient(90deg, #2575fc, #6a11cb);
+    --footer-bg: #f0f0f0;
+  }
+
+  body.dark {
+    --bg-gradient: linear-gradient(-45deg, #1e1e1e, #3a3a3a, #5a5a5a, #1e1e1e);
+    --container-bg: rgba(40, 40, 40, 0.95);
+    --text-color: #f0f0f0;
+    --subtext-color: #ccc;
+    --btn-bg: linear-gradient(90deg, #3a3a3a, #1e1e1e);
+    --footer-bg: #222;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    background: var(--bg-gradient);
+    background-size: 400% 400%;
+    animation: gradientMove 10s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    transition: all 0.5s ease;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .about-container {
+    background: var(--container-bg);
+    padding: 50px;
+    border-radius: 20px;
+    width: 500px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    text-align: center;
+    transform: translateY(50px);
+    opacity: 0;
+    animation: slideUp 1s ease forwards;
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+
+  @keyframes slideUp {
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    color: var(--text-color);
+    animation: fadeIn 1.5s ease forwards;
+  }
+
+  p {
+    color: var(--subtext-color);
+    line-height: 1.6;
+    font-size: 16px;
+    margin-bottom: 15px;
+    opacity: 0;
+    animation: fadeInText 2s ease forwards;
+  }
+
+  p:nth-child(2) { animation-delay: 0.5s; }
+  p:nth-child(3) { animation-delay: 1s; }
+  p:nth-child(4) { animation-delay: 1.5s; }
+
+  @keyframes fadeInText { to { opacity: 1; } }
+
+  .highlight {
+    color: #2575fc;
+    font-weight: bold;
+  }
+
+  .back-btn {
+    margin-top: 25px;
+    padding: 12px 25px;
+    background: var(--btn-bg);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .back-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  }
+
+  footer {
+    width:100%;
+    text-align:center;
+    padding:15px;
+    background-color: var(--footer-bg);
+    position: fixed;
+    bottom:0;
+    left:0;
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+
+  .theme-toggle {
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    background-color: #2575fc;
+    color: white;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+
+  .theme-toggle:hover {
+    background-color: #6a11cb;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="about-container">
+  <button class="theme-toggle" id="themeToggle">☀ Light/ 🌙Dark Mode</button>
+
+  <h1>About Our System</h1>
+  
+  <p>
+    Welcome to our <span class="highlight">MULTI CONDITION DIAGNOSIS USING MEDICAL IMAGING AND PHYSIOLOGICAL DATA</span>.
+  </p>
+
+  <p>
+    This platform helps improve the employs deep learning techniques for image analysis and machine learning algorithms for physiological data classification. 
+  </p>
+
+  <p>
+    Our goal is to provide a simple, secure, and efficient way to enhanced services.
+  </p>
+
+  <button class="back-btn" onclick="window.location.href='feedback.html'">
+    Go to Feedback
+  </button>
+  <br>
+  <button class="back-btn" onclick="window.location.href='dashboard.html'">
+    Back 
+  </button>
+
+</div>
+
+<footer>
+    &copy; 2026 Diagnosis System | All Rights Reserved
+</footer>
+
+<script>
+  const toggleBtn = document.getElementById('themeToggle');
+  toggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+  });
+</script>
+
+</body>
+</html>
