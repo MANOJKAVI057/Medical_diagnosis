@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Medical AI Diagnosis</title>
+<style>
+  /* Define CSS variables for themes */
+  :root {
+    --background-gradient: linear-gradient(135deg, #004369, #98D7D8); 
+    --text-color: #000E2F; /* Navy Blue for high readability */
+    --hero-bg: rgba(255, 255, 255, 0.85); /* Cleaner white backdrop */
+    --button-gradient: linear-gradient(45deg, #0072ff, #00c6ff);
+    --button-text: #ffffff;
+    --theme-toggle-bg: #004369;
+    --theme-toggle-hover: #002b44;
+  }
+
+  [data-theme="dark"] {
+    --background-gradient: linear-gradient(135deg, #001A1F, #003B44);
+    --text-color: #ffffff;
+    --hero-bg: rgba(0, 14, 47, 0.7);
+    --button-gradient: linear-gradient(45deg, #00c6ff, #0072ff);
+    --theme-toggle-bg: #98D7D8;
+    --theme-toggle-hover: #79AFBA;
+  }
+
+  /* Global Styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--background-gradient);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+    color: var(--text-color);
+    text-align: center;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .hero {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 50px;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+
+  .hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+  }
+
+  /* Button styles */
+  .btn {
+    display: inline-block;
+    padding: 14px 30px;
+    font-size: 16px;
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: 0.3s;
+    box-shadow: 0 8px 20px rgba(0, 114, 255, 0.4);
+  }
+
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0, 114, 255, 0.6);
+  }
+
+  /* Theme toggle button styles */
+  .theme-toggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--button-bg);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+  }
+
+  .theme-toggle:hover {
+    background: var(--button-hover-bg);
+  }
+
+  @media(max-width: 600px) {
+    .hero h1 { font-size: 24px; }
+    .hero p { font-size: 15px; }
+  }
+
+  footer{
+  width:100%;
+  text-align:center;
+  padding:15px;
+  background-color:var(--footer-bg);
+  position:fixed;
+  bottom:0;
+  left:0;
+  transition:0.3s ease;
+}
+
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
+  <h1>AI Multi Disease Diagnosis System</h1>
+  <p>Upload image + Vitals signs → Prediction</p>
+  <a href="login.html" class="btn">Start Diagnosis</a>
+</div>
+
+<script>
+  // Theme toggle functionality
+  const toggleButton = document.getElementById('themeToggle');
+
+  // Get current theme
+  const currentTheme = localStorage.getItem('theme') || 'light';
+
+  // Set theme on page load
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  updateButtonText(currentTheme);
+
+  toggleButton.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const newTheme = current === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateButtonText(newTheme);
+  });
+
+  function updateButtonText(theme) {
+    if (theme === 'light') {
+      toggleButton.textContent = '🌙 Dark Mode';
+    } else {
+      toggleButton.textContent = '☀ Light Mode';
+    }
+  }
+</script>
+
+<footer>
+    &copy; 2026 Diagnosis System | All Rights Reserved
+</footer>
+
+</body>
+</html>

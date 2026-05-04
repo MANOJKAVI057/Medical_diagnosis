@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback Form</title>
+<style>
+  :root {
+    --bg-gradient: linear-gradient(to right, #6a11cb, #2575fc);
+    --container-bg: #fff;
+    --text-color: #333;
+    --input-bg: #fff;
+    --input-border: #ccc;
+    --button-bg: #2575fc;
+    --button-hover: #1a5bd8;
+    --footer-bg: #f0f0f0;
+    --status-success: green;
+    --status-error: red;
+  }
+
+  [data-theme="dark"] {
+    --bg-gradient: linear-gradient(to right, #1e1e1e, #3a3a3a);
+    --container-bg: #2c2c2c;
+    --text-color: #f0f0f0;
+    --input-bg: #3a3a3a;
+    --input-border: #555;
+    --button-bg: #444;
+    --button-hover: #222;
+    --footer-bg: #222;
+    --status-success: lightgreen;
+    --status-error: #ff7777;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-gradient);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    transition: all 0.5s ease;
+  }
+
+  .feedback-container {
+    background: var(--container-bg);
+    padding: 40px;
+    border-radius: 15px;
+    width: 400px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--text-color);
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 8px;
+    border: 1px solid var(--input-border);
+    box-sizing: border-box;
+    font-size: 16px;
+    background: var(--input-bg);
+    color: var(--text-color);
+    transition: background 0.5s ease, color 0.5s ease, border-color 0.3s ease;
+  }
+
+  input:focus, textarea:focus {
+    border-color: #2575fc;
+    outline: none;
+  }
+
+  button, .theme-toggle {
+    width: 100%;
+    padding: 15px;
+    background: var(--button-bg);
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+  }
+
+  button:hover, .theme-toggle:hover {
+    background: var(--button-hover);
+  }
+
+  #status {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+
+  footer {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    background-color: var(--footer-bg);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="feedback-container">
+  <button class="theme-toggle" id="themeToggle">☀ Light/🌙 Dark Mode</button>
+
+  <h2>Send Feedback</h2>
+  <form id="feedbackForm">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email" required>
+    <textarea name="message" placeholder="Your Feedback" rows="6" required></textarea>
+    <button type="submit">Send Feedback</button>
+  </form>
+   <button class="back-btn" onclick="window.location.href='about.html'">Back</button>
+
+  <p id="status"></p>
+</div>
+
+<footer>
+  &copy; 2026 Diagnosis System | All Rights Reserved
+</footer>
+
+<script>
+  // Apply saved theme immediately
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+
+  // Feedback form functionality
+  const form = document.getElementById('feedbackForm');
+  const status = document.getElementById('status');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const name = form.name.value.trim();
+    const userEmail = form.email.value.trim();
+    const message = form.message.value.trim();
+
+    if(!name || !userEmail || !message){
+      status.textContent = "Please fill all fields.";
+      status.style.color = getComputedStyle(document.documentElement).getPropertyValue('--status-error');
+      return;
+    }
+
+    const recipient = "manojkavi333@gmail.com"; // <-- Replace with your email
+    const subject = encodeURIComponent(`Feedback from ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${userEmail}\n\nMessage:\n${message}`);
+
+    // Open default email client with all info pre-filled
+    window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+
+    status.textContent = "Your email client has opened. Just click Send!";
+    status.style.color = getComputedStyle(document.documentElement).getPropertyValue('--status-success');
+
+    form.reset();
+  });
+</script>
+
+</body>
+</html>
