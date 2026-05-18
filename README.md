@@ -18,7 +18,7 @@ The system allows doctors to:
 Features
 
 Authentication System
-  * Doctor registration
+  * Admin registration
   * Secure login with JWT tokens
   * Protected API endpoints
 
