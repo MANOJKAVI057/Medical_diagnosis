@@ -88,7 +88,7 @@ Project Structure
 # Installation
 
 1. Clone Repository
-  	git clone https://github.com/your-username/medical-ai-diagnosis.git
+  	git clone 
     cd medical-ai-diagnosis
 
 2. Create Virtual Environment
