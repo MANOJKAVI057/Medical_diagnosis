@@ -1,6 +1,7 @@
 AI Multi-Condition Diagnosis System
 
-    An intelligent medical diagnosis platform built using **FastAPI**, **Machine Learning**, and **Computer Vision** to assist healthcare professionals in detecting multiple medical conditions using patient vitals and medical image analysis.
+    An intelligent medical diagnosis platform built using **FastAPI**, **Machine Learning**, and **Computer Vision** 
+    to assist healthcare professionals in detecting multiple medical conditions using patient vitals and medical image analysis.
 
 The system allows doctors to:
 
